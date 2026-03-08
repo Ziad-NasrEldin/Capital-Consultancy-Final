@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { RevealText } from '../components/RevealText';
+import ScrambleText from '../components/ScrambleText';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -30,26 +31,31 @@ const Contact = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.8 }}
       style={{ paddingTop: '8rem', backgroundColor: 'var(--primary-blue)', minHeight: '100vh', color: 'var(--white)' }}
     >
       <div className="container" style={{ paddingBottom: '6rem' }}>
-        <h1 style={{ fontSize: 'clamp(4rem, 8vw, 8rem)', marginBottom: '4rem', lineHeight: 0.9 }}>
-          <RevealText text="Get In" delay={0.1} /><br/>
-          <RevealText text="Touch" delay={0.2} />
-        </h1>
+        <motion.h1 
+          style={{ fontSize: 'clamp(4rem, 8vw, 8rem)', marginBottom: '4rem', lineHeight: 0.9, willChange: 'transform, opacity' }}
+          initial={{ opacity: 0, y: 100, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 1.8, ease: [0.19, 1, 0.22, 1], delay: 0.3 }}
+        >
+          <RevealText text="Get In" delay={0.7} /><br/>
+          <RevealText text="Touch" delay={1} />
+        </motion.h1>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '6rem' }}>
+        <div className="contact-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(350px, 100%), 1fr))', gap: '6rem' }}>
           
           <motion.div 
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -150 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}
+            transition={{ duration: 1.6, delay: 1, ease: [0.19, 1, 0.22, 1] }}
+            style={{ display: 'flex', flexDirection: 'column', gap: '3rem', willChange: 'transform, opacity' }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <h2 style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem', textTransform: 'uppercase', opacity: 0.7 }}>Email</h2>
-              <a href="mailto:info@capitalconsultancy.com" style={{ fontSize: '1.5rem', textDecoration: 'underline' }}>
+              <a href="mailto:info@capitalconsultancy.com" style={{ fontSize: '1.5rem', textDecoration: 'underline', wordBreak: 'break-all' }}>
                 info@capitalconsultancy.com
               </a>
             </div>
@@ -74,9 +80,10 @@ const Contact = () => {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: 150 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 1.6, delay: 1, ease: [0.19, 1, 0.22, 1] }}
+            style={{ willChange: 'transform, opacity' }}
           >
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Request Consultation</h2>
@@ -142,12 +149,11 @@ const Contact = () => {
 
               <motion.button 
                 type="submit" 
-                style={{ alignSelf: 'flex-start', fontFamily: 'var(--font-mono)', fontSize: '1rem', padding: '1.5rem 3rem', backgroundColor: 'var(--white)', color: 'var(--primary-blue)', border: 'none', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '2rem' }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ duration: 0.2 }}
+                style={{ alignSelf: 'flex-start', fontFamily: 'var(--font-mono)', fontSize: '1rem', padding: '1.5rem 3rem', backgroundColor: 'var(--white)', color: 'var(--primary-blue)', border: '1px solid var(--white)', borderRadius: 0, cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '2rem', transition: 'background-color 0.15s cubic-bezier(0.4,0,0.2,1), color 0.15s cubic-bezier(0.4,0,0.2,1), border-color 0.15s cubic-bezier(0.4,0,0.2,1)' }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.15 }}
               >
-                Request Proposal
+                <ScrambleText text="Request Proposal" />
               </motion.button>
 
             </form>

@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build output (re-generated inside Docker)
+dist/
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+
+# Development / editor artifacts
+.git/
+.gitignore
+.vscode/
+.idea/
+*.log
+*.lock
+npm-debug.log*
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Skill/documentation directories (not needed in the image)
+Agent-Skills/
+OLD/
+
+# Source maps and type definitions (already bundled)
+*.map

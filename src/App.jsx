@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Layout from './components/Layout';
+import LoadingScreen from './components/LoadingScreen';
 import Home from './pages/Home';
 import ServicesOverview from './pages/ServicesOverview';
 import ServiceDetail from './pages/ServiceDetail';
@@ -29,8 +30,22 @@ const AnimatedRoutes = () => {
 };
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Show loading screen for 2 seconds on initial load/refresh
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <Router>
+      <AnimatePresence>
+        {isLoading && <LoadingScreen isLoading={isLoading} />}
+      </AnimatePresence>
       <Layout>
         <AnimatedRoutes />
       </Layout>

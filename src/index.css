@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap');
 
 :root {
-  --primary-blue: #1925aa;
+  --primary-blue: #aa2a19;
+  --primary-rgb: 170, 42, 25;
   --error-red: #c41230;
   --mercury: #e8e6e0;
   --white: #fff;
@@ -24,6 +25,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+::selection {
+  background-color: #ffffff;
+  color: #aa2a19;
 }
 
 body {
@@ -84,6 +90,12 @@ a {
   padding: 6rem 0;
 }
 
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 3.5rem 0;
+  }
+}
+
 .text-center { text-align: center; }
 
 .bg-blue { background-color: var(--primary-blue); color: var(--white); }
@@ -95,12 +107,12 @@ a {
   align-items: center;
   justify-content: center;
   padding: 1rem 2rem;
-  font-family: var(--font-heading);
+  font-family: var(--font-mono);
   font-weight: 500;
   font-size: 1rem;
-  border-radius: 9999px;
+  border-radius: 0;
   cursor: pointer;
-  transition: all var(--transition-default);
+  transition: background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1), color 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid transparent;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -147,4 +159,76 @@ a {
 }
 ::-webkit-scrollbar-thumb {
   background: var(--primary-blue);
+}
+
+/* ── Footer responsive ── */
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    min-height: auto !important;
+  }
+  .footer-divider {
+    display: none !important;
+  }
+  .footer-zone {
+    padding: 2.5rem 1.5rem !important;
+    gap: 2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .footer-bottom {
+    padding: 1.25rem 1.5rem !important;
+    text-align: center;
+  }
+  .footer-zone--logo {
+    display: none !important;
+  }
+}
+
+/* ── Home industries grid responsive ── */
+@media (max-width: 1024px) {
+  .home-industries-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 640px) {
+  .home-industries-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── Contact page responsive ── */
+@media (max-width: 768px) {
+  .contact-grid {
+    gap: 3rem !important;
+  }
+}
+@media (max-width: 540px) {
+  .contact-grid {
+    gap: 2.5rem !important;
+  }
+}
+
+/* ── About page responsive ── */
+@media (max-width: 640px) {
+  .about-grid {
+    gap: 2.5rem !important;
+  }
+}
+
+/* ── Projects page responsive ── */
+@media (max-width: 640px) {
+  .projects-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── ServiceDetail page responsive ── */
+@media (max-width: 640px) {
+  .service-detail-list {
+    grid-template-columns: 1fr !important;
+  }
+  .service-detail-page {
+    padding-top: 7rem !important;
+    padding-bottom: 5rem !important;
+  }
 }

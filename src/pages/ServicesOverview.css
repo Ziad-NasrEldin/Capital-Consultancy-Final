@@ -1,0 +1,130 @@
+/* ── Services Overview Page ── */
+.svcp {
+  padding-top: 0;
+  min-height: 100vh;
+  background-color: var(--mercury);
+}
+
+/* Hero */
+.svcp__hero {
+  position: relative;
+  padding: 10rem 0 4rem;
+  background-color: var(--mercury);
+  overflow: hidden;
+}
+
+.svcp__hero-inner {
+  padding: 0 5%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.svcp__hero-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(var(--primary-rgb), 0.18);
+  padding-bottom: 1rem;
+  margin-bottom: 3rem;
+}
+
+.svcp__label {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary-blue);
+}
+
+/* Title area */
+.svcp__hero-titles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: end;
+  margin-bottom: 3rem;
+}
+
+.svcp__hero-title {
+  font-family: var(--font-heading);
+  font-size: clamp(3.5rem, 8vw, 8rem);
+  font-weight: 800;
+  color: var(--primary-blue);
+  line-height: 0.92;
+  margin: 0;
+}
+
+.svcp__hero-desc {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: rgba(0, 0, 0, 0.6);
+  max-width: 420px;
+  align-self: end;
+  padding-bottom: 0.75rem;
+  border-left: 1px solid rgba(var(--primary-rgb), 0.2);
+  padding-left: 1.5rem;
+}
+
+/* Hero image */
+.svcp__hero-image {
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+/* Keywords */
+.svcp__hero-keywords {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.svcp__hero-keywords p {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary-blue);
+  margin: 0;
+}
+
+/* List section */
+.svcp__list-section {
+  padding: 4rem 5% 6rem;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .svcp__hero-titles {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .svcp__hero-desc {
+    max-width: 100%;
+    border-left: none;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .svcp__hero {
+    padding-top: 7rem;
+  }
+
+  .svcp__hero-title {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+
+  .svcp__hero-image {
+    aspect-ratio: 16 / 9;
+  }
+
+  .svcp__hero-keywords {
+    gap: 1rem;
+  }
+}

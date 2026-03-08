@@ -1,20 +1,22 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
 import { RevealText } from '../components/RevealText';
+import ScrambleText from '../components/ScrambleText';
+import HalftoneImage from '../components/HalftoneImage';
+import './ServicesOverview.css';
 
 const services = [
-  { slug: 'engineering-technical-consulting', title: 'Engineering & Technical Consulting', desc: 'Expert advisory services for planning and development.' },
-  { slug: 'engineering-design-planning', title: 'Engineering Design & Planning', desc: 'Electrical, mechanical, structural, and system design.' },
-  { slug: 'infrastructure-smart-systems', title: 'Infrastructure & Smart Systems', desc: 'Smart systems, data centers, and renewable energy integration.' },
-  { slug: 'project-construction-management', title: 'Project & Construction Management', desc: 'Planning, scheduling, and comprehensive site supervision.' },
-  { slug: 'testing-commissioning', title: 'Testing, Commissioning & Optimization', desc: 'System audits, safety compliance, and performance optimization.' }
+  { slug: 'engineering-technical-consulting', title: ['Engineering &', 'Technical Consulting'], desc: 'Expert advisory services for planning, feasibility studies, and system design across all engineering disciplines.', img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80' },
+  { slug: 'engineering-design-planning', title: ['Engineering', 'Design & Planning'], desc: 'Complete electrical, mechanical, structural, and civil engineering design for projects of any scale.', img: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80' },
+  { slug: 'infrastructure-smart-systems', title: ['Infrastructure &', 'Smart Systems'], desc: 'Utility networks, smart building systems, data centers, and renewable energy integration solutions.', img: 'https://images.unsplash.com/photo-1497366754035-f200968a6e23?auto=format&fit=crop&q=80' },
+  { slug: 'project-construction-management', title: ['Project &', 'Construction Management'], desc: 'Planning, scheduling, supervision, and comprehensive project lifecycle control from start to finish.', img: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80' },
+  { slug: 'testing-commissioning', title: ['Testing, Commissioning', '& Optimization'], desc: 'System audits, performance testing, safety compliance, and operational optimization for completed works.', img: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80' }
 ];
 
-const staggerItem = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+const slowFadeUp = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 1.4, ease: [0.16, 1, 0.3, 1] } }
 };
 
 const ServicesOverview = () => {
@@ -23,67 +25,107 @@ const ServicesOverview = () => {
   }, []);
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="services-page" 
-      style={{ paddingTop: '8rem', minHeight: '100vh', backgroundColor: 'var(--mercury)' }}
+      transition={{ duration: 0.8 }}
+      className="svcp"
     >
-      <div className="container">
-        <div style={{ marginBottom: '4rem' }}>
-          <h1 style={{ fontSize: 'clamp(4rem, 8vw, 8rem)', color: 'var(--primary-blue)', lineHeight: 0.9 }}>
-            <RevealText text="Our" delay={0} /><br/>
-            <RevealText text="Services" delay={0.1} />
-          </h1>
-        </div>
+      {/* Hero area */}
+      <section className="svcp__hero">
+        <div className="svcp__hero-inner">
+          <motion.div
+            className="svcp__hero-header"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <span className="svcp__label"><ScrambleText text="Our Services" /></span>
+            <span className="svcp__label">[CCI.S]</span>
+          </motion.div>
 
-        <motion.div 
-          className="services-list" 
-          style={{ borderTop: '2px solid var(--primary-blue)' }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.3 } }}
-        >
+          <div className="svcp__hero-titles">
+            <motion.h1
+              className="svcp__hero-title"
+              initial={{ opacity: 0, y: 80 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+            >
+              A Versatile<br />
+              Range of<br />
+              Services
+            </motion.h1>
+
+            <motion.p
+              className="svcp__hero-desc"
+              initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 1.0 }}
+            >
+              From concept to completion, Capital Consultancy delivers multidisciplinary engineering expertise — turning complex challenges into fully operational, sustainable projects.
+            </motion.p>
+          </div>
+
+          <motion.div
+            className="svcp__hero-image"
+            initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.5, ease: [0.2, 0.8, 0.2, 1], delay: 0.8 }}
+          >
+            <HalftoneImage
+              src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&q=80"
+              alt="Engineering services overview"
+            />
+          </motion.div>
+
+          <motion.div
+            className="svcp__hero-keywords"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
+          >
+            <p>Consulting</p>
+            <p>Design</p>
+            <p>Management</p>
+            <p>Commissioning</p>
+            <p>Infrastructure</p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Service list */}
+      <section className="svcp__list-section">
+        <ul className="svc-list">
           {services.map((service, index) => (
-            <motion.div key={index} variants={staggerItem} style={{ borderBottom: '1px solid rgba(25, 37, 170, 0.2)' }}>
-              <Link to={`/services/${service.slug}`} style={{
-                display: 'grid',
-                gridTemplateColumns: '80px 1fr auto',
-                alignItems: 'center',
-                padding: '3rem 0',
-                textDecoration: 'none',
-                transition: 'all var(--transition-default)'
-              }} className="service-row">
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '2rem', color: 'var(--primary-blue)' }} className="sr-num">
-                  0{index + 1}
-                </div>
-                <div>
-                  <h3 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', marginBottom: '0.5rem', color: 'var(--primary-blue)' }} className="sr-title">
-                    {service.title}
-                  </h3>
-                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.875rem', textTransform: 'uppercase', color: 'var(--primary-blue)' }} className="sr-desc">
-                    {service.desc}
-                  </p>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--primary-blue)' }} className="sr-action">
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', padding: '0.5rem 1rem', border: '1px solid rgba(25, 37, 170, 0.2)' }}>
-                    VIEW DETAILS
-                  </span>
-                  <ArrowRight />
-                </div>
-              </Link>
-            </motion.div>
+            <motion.li
+              key={index}
+              className="svc-list__item"
+              initial="hidden" whileInView="visible"
+              viewport={{ once: true, margin: '-60px' }}
+              variants={slowFadeUp}
+            >
+              <span className="svc-list__num">{index + 1}</span>
+
+              <div className="svc-list__img-wrap">
+                <HalftoneImage
+                  src={service.img}
+                  alt={service.title.join(' ')}
+                />
+              </div>
+
+              <div className="svc-list__content">
+                <h3>
+                  <span>{service.title[0]}</span><br />
+                  <span>{service.title[1]}</span>
+                </h3>
+                <Link to={`/services/${service.slug}`} className="svc-list__read-more">
+                  <ScrambleText text="View Details" />
+                </Link>
+              </div>
+
+              <div className="svc-list__desc">
+                <p>{service.desc}</p>
+              </div>
+            </motion.li>
           ))}
-        </motion.div>
-      </div>
-      
-      {/* Inline styles for hover effect */}
-      <style dangerouslySetInnerHTML={{__html: `
-        .service-row:hover { background-color: var(--primary-blue) !important; padding-left: 1rem !important; padding-right: 1rem !important; }
-        .service-row:hover .sr-num, .service-row:hover .sr-title, .service-row:hover .sr-desc, .service-row:hover .sr-action { color: var(--white) !important; }
-        .service-row:hover span { border-color: rgba(255,255,255,0.4) !important; }
-      `}} />
+        </ul>
+      </section>
     </motion.div>
   );
 };

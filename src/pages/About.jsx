@@ -12,23 +12,27 @@ const About = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.8 }}
       style={{ paddingTop: '8rem', backgroundColor: 'var(--mercury)', minHeight: '100vh', color: 'var(--primary-blue)' }}
     >
       <div className="container" style={{ paddingBottom: '6rem' }}>
-        <h1 style={{ fontSize: 'clamp(4rem, 8vw, 8rem)', marginBottom: '4rem', lineHeight: 0.9 }}>
-          <RevealText text="About" delay={0.1} /><br/>
-          <RevealText text="Us" delay={0.2} />
-        </h1>
+        <motion.h1 
+          style={{ fontSize: 'clamp(4rem, 8vw, 8rem)', marginBottom: '4rem', lineHeight: 0.9, willChange: 'transform, opacity' }}
+          initial={{ opacity: 0, y: 100, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 1.6, ease: [0.19, 1, 0.22, 1], delay: 0.3 }}
+        >
+          <RevealText text="About" delay={0.6} /><br/>
+          <RevealText text="Us" delay={0.85} />
+        </motion.h1>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem' }}>
+        <div className="about-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem' }}>
           
           <motion.div 
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            style={{ borderTop: '2px solid var(--primary-blue)', paddingTop: '2rem' }}
+            initial={{ opacity: 0, x: -100, y: 50 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1], delay: 0.8 }}
+            style={{ borderTop: '2px solid var(--primary-blue)', paddingTop: '2rem', willChange: 'transform, opacity' }}
           >
             <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>Company Overview</h2>
             <p style={{ fontSize: '1.25rem', lineHeight: 1.6, marginBottom: '2rem' }}>
@@ -37,11 +41,10 @@ const About = () => {
           </motion.div>
 
           <motion.div 
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            style={{ borderTop: '2px solid var(--primary-blue)', paddingTop: '2rem' }}
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1], delay: 1.1 }}
+            style={{ borderTop: '2px solid var(--primary-blue)', paddingTop: '2rem', willChange: 'transform, opacity' }}
           >
             <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>Mission & Vision</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -61,11 +64,10 @@ const About = () => {
           </motion.div>
 
           <motion.div 
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
-            style={{ borderTop: '2px solid var(--primary-blue)', paddingTop: '2rem' }}
+            initial={{ opacity: 0, x: 100, y: 50 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1], delay: 1.4 }}
+            style={{ borderTop: '2px solid var(--primary-blue)', paddingTop: '2rem', willChange: 'transform, opacity' }}
           >
             <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>Core Values</h2>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '1.25rem' }}>
