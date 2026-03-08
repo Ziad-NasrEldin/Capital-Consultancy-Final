@@ -28,6 +28,6 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 COPY nginx.spa.conf /etc/nginx/conf.d/default.conf
 
 # Expose port expected by the host reverse proxy
-EXPOSE 3334
+EXPOSE 3000
 
 CMD ["nginx", "-g", "daemon off;"]

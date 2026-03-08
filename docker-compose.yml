@@ -1,5 +1,4 @@
 services:
-  # Capital Consultancy AG — React/Vite static frontend
   capital-consultancy:
     build:
       context: .
@@ -7,9 +6,7 @@ services:
     container_name: capital_consultancy_app
     restart: unless-stopped
     ports:
-      # Host port 3334 → container port 3000 (React/Vite)
-      # Host Nginx then reverse-proxies from 443 → 127.0.0.1:3334
-      - "3334:3000"
+      - "3335:80"
     networks:
       - capital_consultancy_network
 
