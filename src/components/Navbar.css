@@ -1,0 +1,132 @@
+/* Reset and Defaults */
+.site-header {
+  position: fixed;
+  top: 1.5rem; /* Margin to top edge */
+  left: 1.5rem;
+  right: 1.5rem;
+  height: max-content;
+  z-index: 100;
+  pointer-events: none; /* Let clicks pass through empty areas */
+}
+
+/* Global Vertical Grid Lines */
+.global-grid-lines {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 1.5rem;
+  right: 1.5rem;
+  pointer-events: none;
+  z-index: 50; /* Above background, below content */
+}
+
+.grid-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 1px dotted rgba(255, 255, 255, 0.3);
+}
+
+.line-50 {
+  left: 50%;
+}
+
+.line-75 {
+  left: 75%;
+}
+
+.light-mode-grid .grid-line {
+  border-left-color: rgba(25, 37, 170, 0.15);
+}
+
+/* Header Content */
+.header-logo-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+}
+
+.logo-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: var(--primary-blue); /* Solid blue background */
+  color: var(--white);
+  padding: 1.5rem 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  transition: opacity var(--transition-default);
+}
+
+.logo-box:hover {
+  opacity: 0.9;
+}
+
+/* Navigation Lists */
+.nav-col-content {
+  position: absolute;
+  top: 0;
+  padding-left: 1.5rem;
+  padding-top: 1rem;
+  pointer-events: auto;
+}
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nav-group a {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--white);
+  opacity: 0.8;
+  letter-spacing: 0.05em;
+  transition: opacity 0.2s, color 0.2s;
+  text-decoration: none;
+}
+
+.nav-group a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* Action Button */
+.header-action {
+  position: absolute;
+  top: 0;
+  right: 0;
+  pointer-events: auto;
+}
+
+.contact-btn-corner {
+  background-color: var(--primary-blue);
+  color: var(--white);
+  border: none;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.contact-btn-corner:hover {
+  background-color: var(--white);
+  color: var(--primary-blue);
+}
+
+/* Light Mode Overrides for scroll or other pages */
+.site-header.light-mode .nav-group a {
+  color: var(--primary-blue);
+}
+.site-header.light-mode .nav-group a:hover {
+  opacity: 1;
+}
