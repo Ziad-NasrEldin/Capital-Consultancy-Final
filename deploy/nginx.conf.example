@@ -13,7 +13,7 @@
 
 # ---- Upstream: the Docker container ----------------------------------------
 upstream capital_consultancy_app {
-    server 127.0.0.1:3090;
+    server 127.0.0.1:3333;
     keepalive 32;
 }
 
@@ -21,7 +21,7 @@ upstream capital_consultancy_app {
 server {
     listen 80;
     listen [::]:80;
-    server_name YOUR_DOMAIN.com www.YOUR_DOMAIN.com;
+    server_name capital-consultancy.com www.capital-consultancy.com
 
     # Allow Let's Encrypt ACME challenge before redirect
     location /.well-known/acme-challenge/ {
@@ -29,7 +29,7 @@ server {
     }
 
     location / {
-        return 301 https://YOUR_DOMAIN.com$request_uri;
+        return 301 https://capital-consultancy.com$request_uri;
     }
 }
 
@@ -37,16 +37,16 @@ server {
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
-    server_name YOUR_DOMAIN.com www.YOUR_DOMAIN.com;
+    server_name capital-consultancy.com www.capital-consultancy.com;
 
     # Redirect www → non-www
-    if ($host = www.YOUR_DOMAIN.com) {
-        return 301 https://YOUR_DOMAIN.com$request_uri;
+    if ($host = www.capital-consultancy.com) {
+        return 301 https://capital-consultancy.com$request_uri;
     }
 
     # ---- SSL Configuration --------------------------------------------------
-    ssl_certificate     /etc/letsencrypt/live/YOUR_DOMAIN.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/YOUR_DOMAIN.com/privkey.pem;
+    ssl_certificate     /etc/letsencrypt/live/capital-consultancy.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/capital-consultancy.com/privkey.pem;
     ssl_protocols       TLSv1.2 TLSv1.3;
     ssl_ciphers         HIGH:!aNULL:!MD5;
     ssl_prefer_server_ciphers on;

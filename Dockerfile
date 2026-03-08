@@ -1,37 +1,33 @@
-# =============================================================================
-# Capital Consultancy AG — Docker Image
-# Multi-stage build: Node.js (build) → Nginx Alpine (serve)
-# =============================================================================
+# Multi-stage build for optimized production image
+# Stage 1: build the Vite/React app
+# Stage 2: serve the static output with nginx
 
-# ---- Stage 1: Build --------------------------------------------------------
-FROM node:25-alpine AS builder
-
+# ---- Stage 1: Builder -------------------------------------------------------
+FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Copy dependency manifests first (layer caching)
-COPY package.json package-lock.json ./
+# Copy manifests and install deps (layer-cached until package.json changes)
+COPY package.json package-lock.json* ./
+RUN npm ci --ignore-scripts
 
-# Clean install — uses exact versions from lockfile
-RUN npm ci
-
-# Copy source code
+# Copy source and build
 COPY . .
-
-# Build production bundle → outputs to /app/dist
 RUN npm run build
+# Output: /app/dist
 
-# ---- Stage 2: Serve --------------------------------------------------------
-FROM nginx:alpine AS runner
+# ---- Stage 2: Production server (nginx) -------------------------------------
+FROM nginx:1.27-alpine AS runner
 
-# Remove default nginx config and html
+# Remove default nginx content
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy built assets from builder
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy container-level nginx configuration (SPA routing + caching)
-COPY nginx.conf /etc/nginx/nginx.conf
+# Nginx config: handles SPA client-side routing (react-router fallback)
+COPY nginx.spa.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
+# Expose port expected by the host reverse proxy
+EXPOSE 3334
 
 CMD ["nginx", "-g", "daemon off;"]
