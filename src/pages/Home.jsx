@@ -152,21 +152,14 @@ const Home = () => {
     >
       {/* SECTION 1 - HERO */}
       <section className="hero" ref={heroRef}>
-        <div className="hero-bg-media" style={{ willChange: 'auto' }}>
-          <picture>
-            <source srcSet="/images/unsplash/hero.webp" type="image/webp" />
-            <img
-              src="/images/unsplash/hero.webp"
-              alt="Large-scale engineering structure"
-              width="1920"
-              height="1080"
-              fetchPriority="high"
-              loading="eager"
-              decoding="async"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-            />
-          </picture>
-        </div>
+        <div
+          className="hero-bg-media"
+          aria-hidden="true"
+          style={{
+            willChange: 'auto',
+            background: 'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.14), rgba(255,255,255,0) 46%), linear-gradient(140deg, #aa2a19, #7d1e12)',
+          }}
+        />
 
         <motion.div
           className="blueprint-overlay"
