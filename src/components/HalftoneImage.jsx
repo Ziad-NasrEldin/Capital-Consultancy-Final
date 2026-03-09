@@ -2,10 +2,9 @@ import React, { useRef, useEffect, useMemo, useState } from 'react';
 import './HalftoneImage.css';
 import { optimizeImageUrl, buildUnsplashSrcSet } from '../utils/imageUrl';
 
-// Gaussian blur radius applied before rasterization
-const BLUR_PX  = 3;
-// "15ppi" bitmap cell size — coarse grid sampled from blurred image
-const CELL     = 4;
+// Keep raster work coarser so canvas generation stays cheap on first load.
+const BLUR_PX = 2;
+const CELL = 6;
 const BG_COLOR = '#aa2a19';
 
 const HalftoneImage = ({
@@ -21,9 +20,12 @@ const HalftoneImage = ({
   const boostRef     = useRef(null);
   const containerRef = useRef(null);
   const hasRendered  = useRef(false);
+  const drawScheduled = useRef(false);
   const cursorPos    = useRef({ x: 50, y: 50 });
-  const [isInView, setIsInView] = useState(heroInteractive);
+  const [isInView, setIsInView] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isLowPower, setIsLowPower] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -36,7 +38,23 @@ const HalftoneImage = ({
     return () => media.removeEventListener('change', update);
   }, []);
 
-  const lightweightMode = isMobile && !heroInteractive;
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const motionMedia = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const updateMotion = () => setPrefersReducedMotion(motionMedia.matches);
+    updateMotion();
+    motionMedia.addEventListener('change', updateMotion);
+
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const hasSaveData = Boolean(conn && conn.saveData);
+    const weakCpu = typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4;
+    setIsLowPower(hasSaveData || weakCpu);
+
+    return () => motionMedia.removeEventListener('change', updateMotion);
+  }, []);
+
+  const lightweightMode = isMobile || isLowPower || prefersReducedMotion;
   const aspectRatio = intrinsicWidth / intrinsicHeight;
 
   const imgSizes = sizes || (heroInteractive
@@ -58,7 +76,24 @@ const HalftoneImage = ({
   }, [src, heroInteractive, aspectRatio]);
 
   useEffect(() => {
-    if (heroInteractive || !containerRef.current || isInView) return;
+    if (!containerRef.current || isInView) return;
+
+    // Avoid canvas work on first paint for hero media; render it when idle.
+    if (heroInteractive) {
+      const idleHandle = window.requestIdleCallback
+        ? window.requestIdleCallback(() => setIsInView(true), { timeout: 1800 })
+        : window.setTimeout(() => setIsInView(true), 900);
+
+      return () => {
+        if (window.cancelIdleCallback && typeof idleHandle === 'number') {
+          window.cancelIdleCallback(idleHandle);
+        } else {
+          window.clearTimeout(idleHandle);
+        }
+      };
+    }
+
+    if (lightweightMode) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -72,11 +107,12 @@ const HalftoneImage = ({
 
     observer.observe(containerRef.current);
     return () => observer.disconnect();
-  }, [heroInteractive, isInView]);
+  }, [heroInteractive, isInView, lightweightMode]);
 
   // ── Draw halftone onto canvas (lazy load when in viewport) ─────────────────
   useEffect(() => {
     hasRendered.current = false;
+    drawScheduled.current = false;
   }, [optimizedSrc]);
 
   useEffect(() => {
@@ -84,15 +120,17 @@ const HalftoneImage = ({
 
     const canvas = canvasRef.current;
     const boostCanvas = boostRef.current;
-    if (!canvas || !boostCanvas) return;
+    if (!canvas) return;
+    if (heroInteractive && !boostCanvas) return;
     if (hasRendered.current) return;
+    if (drawScheduled.current) return;
 
-    hasRendered.current = true;
+    drawScheduled.current = true;
     const isSmallViewport = typeof window !== 'undefined' && window.innerWidth < 768;
-    const OUT_W = heroInteractive ? 1200 : (isSmallViewport ? 640 : 900);
+    const OUT_W = heroInteractive ? (isSmallViewport ? 720 : 960) : (isSmallViewport ? 480 : 720);
     const OUT_H = Math.round(OUT_W * 0.75);
 
-    {
+    const draw = () => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.onload = () => {
@@ -130,15 +168,19 @@ const HalftoneImage = ({
         //           but fill each dot with the actual blurred image color.
         canvas.width = OUT_W;
         canvas.height = OUT_H;
-        boostCanvas.width = OUT_W;
-        boostCanvas.height = OUT_H;
+        if (heroInteractive && boostCanvas) {
+          boostCanvas.width = OUT_W;
+          boostCanvas.height = OUT_H;
+        }
 
         const ctx = canvas.getContext('2d', { alpha: false });
-        const boostCtx = boostCanvas.getContext('2d', { alpha: false });
+        const boostCtx = heroInteractive && boostCanvas ? boostCanvas.getContext('2d', { alpha: false }) : null;
         ctx.fillStyle = BG_COLOR;
-        boostCtx.fillStyle = BG_COLOR;
         ctx.fillRect(0, 0, OUT_W, OUT_H);
-        boostCtx.fillRect(0, 0, OUT_W, OUT_H);
+        if (boostCtx) {
+          boostCtx.fillStyle = BG_COLOR;
+          boostCtx.fillRect(0, 0, OUT_W, OUT_H);
+        }
 
         for (let y = CELL / 2; y < OUT_H; y += CELL) {
           for (let x = CELL / 2; x < OUT_W; x += CELL) {
@@ -153,31 +195,52 @@ const HalftoneImage = ({
             const radius = minR + darkness * (maxR - minR);
             if (radius > 0.4) {
               ctx.fillStyle = `rgb(${r},${g},${b})`;
-              boostCtx.fillStyle = `rgb(${r},${g},${b})`;
               ctx.beginPath();
-              boostCtx.beginPath();
               ctx.arc(x, y, radius, 0, Math.PI * 2);
-              boostCtx.arc(x, y, radius, 0, Math.PI * 2);
               ctx.fill();
-              boostCtx.fill();
+              if (boostCtx) {
+                boostCtx.fillStyle = `rgb(${r},${g},${b})`;
+                boostCtx.beginPath();
+                boostCtx.arc(x, y, radius, 0, Math.PI * 2);
+                boostCtx.fill();
+              }
             }
 
             // Boost layer: coarser, punchier halftone for hero cursor hotspot.
-            const boostDarkness = Math.pow(darkness, 0.62);
-            const boostRadius = CELL * (0.18 + boostDarkness * 0.92);
-            if (boostRadius > 0.35) {
-              const ink = Math.max(10, Math.round(115 - boostDarkness * 105));
-              const alpha = 0.35 + boostDarkness * 0.55;
-              boostCtx.fillStyle = `rgba(${ink}, ${ink}, ${ink}, ${alpha})`;
-              boostCtx.beginPath();
-              boostCtx.arc(x, y, boostRadius, 0, Math.PI * 2);
-              boostCtx.fill();
+            if (boostCtx) {
+              const boostDarkness = Math.pow(darkness, 0.62);
+              const boostRadius = CELL * (0.18 + boostDarkness * 0.92);
+              if (boostRadius > 0.35) {
+                const ink = Math.max(10, Math.round(115 - boostDarkness * 105));
+                const alpha = 0.35 + boostDarkness * 0.55;
+                boostCtx.fillStyle = `rgba(${ink}, ${ink}, ${ink}, ${alpha})`;
+                boostCtx.beginPath();
+                boostCtx.arc(x, y, boostRadius, 0, Math.PI * 2);
+                boostCtx.fill();
+              }
             }
           }
         }
+
+        hasRendered.current = true;
+      };
+      img.onerror = () => {
+        drawScheduled.current = false;
       };
       img.src = optimizedSrc;
-    }
+    };
+
+    const handle = window.requestIdleCallback
+      ? window.requestIdleCallback(draw, { timeout: heroInteractive ? 1500 : 900 })
+      : window.setTimeout(draw, heroInteractive ? 800 : 250);
+
+    return () => {
+      if (window.cancelIdleCallback && typeof handle === 'number') {
+        window.cancelIdleCallback(handle);
+      } else {
+        window.clearTimeout(handle);
+      }
+    };
   }, [optimizedSrc, isInView, heroInteractive, lightweightMode]);
 
   // ── Cursor tracking for hero interactive mode ──────────────────────────────
@@ -196,11 +259,10 @@ const HalftoneImage = ({
       container.style.setProperty('--cursor-y', `${y}%`);
     };
 
-    // Use document/window-level listener to track cursor even when over text overlays
-    document.addEventListener('mousemove', handleMouseMove, true);
+    container.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove, true);
+      container.removeEventListener('mousemove', handleMouseMove);
     };
   }, [heroInteractive]);
 
@@ -243,7 +305,9 @@ const HalftoneImage = ({
           <canvas ref={canvasRef} className="halftone-canvas" />
 
           {/* Layer 4: Hero-only boosted halftone hotspot */}
-          <canvas ref={boostRef} className="halftone-canvas halftone-canvas-boost" />
+          {heroInteractive && (
+            <canvas ref={boostRef} className="halftone-canvas halftone-canvas-boost" />
+          )}
         </>
       )}
     </div>

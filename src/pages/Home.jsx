@@ -168,7 +168,7 @@ const Home = () => {
             sizes="100vw"
             intrinsicWidth={1920}
             intrinsicHeight={1080}
-            heroInteractive
+            heroInteractive={!reduceMotion}
           />
         </motion.div>
 
@@ -325,7 +325,6 @@ const Home = () => {
                 sizes="(max-width: 767px) 92vw, 62vw"
                 intrinsicWidth={1600}
                 intrinsicHeight={900}
-                heroInteractive
                 className="hero-halftone-full"
               />
             </motion.div>
