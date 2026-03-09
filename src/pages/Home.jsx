@@ -431,14 +431,22 @@ const Home = () => {
                   <span>{service.title[0]}</span><br />
                   <span>{service.title[1]}</span>
                 </motion.h3>
-                <motion.div
-                  animate={{ color: isActive ? 'var(--white)' : 'var(--primary-blue)', borderColor: isActive ? 'rgba(255,255,255,0.4)' : 'rgba(var(--primary-rgb), 0.3)' }}
-                  transition={{ duration: 0.3 }}
+                <Link 
+                  to={`/services/${service.slug}`} 
+                  className="svc-list__read-more" 
+                  title={`Learn more about ${service.title.join(' ').trim()}`}
+                  aria-label={`Learn more about ${service.title.join(' ').trim()}`}
+                  style={{ 
+                    color: isActive ? 'var(--white)' : 'var(--primary-blue)',
+                    borderColor: isActive ? 'rgba(255,255,255,0.4)' : 'rgba(var(--primary-rgb), 0.3)',
+                    transition: 'color 0.3s ease, border-color 0.3s ease'
+                  }}
                 >
-                  <Link to={`/services/${service.slug}`} className="svc-list__read-more" style={{ color: 'inherit', borderColor: 'inherit' }}>
-                    <ScrambleText text="Read More" />
-                  </Link>
-                </motion.div>
+                  <ScrambleText text="Read More" />
+                  <span style={{position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0}}>
+                    about {service.title.join(' ')}
+                  </span>
+                </Link>
               </div>
 
               <div className="svc-list__desc" style={{ position: 'relative', zIndex: 1 }}>

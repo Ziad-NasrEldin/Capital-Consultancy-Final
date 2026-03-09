@@ -11,7 +11,7 @@ const linkStyle = {
 
 const dimLinkStyle = {
   ...linkStyle,
-  color: 'rgba(255,255,255,0.55)',
+  color: 'rgba(255,255,255,0.9)',
 };
 
 const Footer = () => {
@@ -110,7 +110,7 @@ const Footer = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '0.75rem',
-              color: 'rgba(255,255,255,0.6)',
+              color: 'rgba(255,255,255,0.95)',
               fontSize: '0.75rem',
               marginBottom: '1rem',
             }}>
@@ -163,7 +163,7 @@ const Footer = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
             <Link to="/" style={dimLinkStyle}><ScrambleText text="Privacy Policy" /></Link>
             <Link to="/" style={dimLinkStyle}><ScrambleText text="Terms and Conditions" /></Link>
-            <div style={{ color: 'rgba(255,255,255,0.45)', marginTop: '0.5rem' }}>Made by Mavoid</div>
+            <div style={{ color: 'rgba(255,255,255,0.85)', marginTop: '0.5rem' }}>Made by Mavoid</div>
           </div>
         </div>
       </div>
@@ -173,7 +173,7 @@ const Footer = () => {
         borderTop: '1px solid rgba(255,255,255,0.15)',
         padding: '1.25rem 3.5rem',
         fontSize: '0.7rem',
-        color: 'rgba(255,255,255,0.45)',
+        color: 'rgba(255,255,255,0.85)',
         letterSpacing: '0.06em',
       }}>
         © 2026. Capital Consultancy Inc. All Rights Reserved.

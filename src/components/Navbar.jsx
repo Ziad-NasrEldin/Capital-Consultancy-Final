@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, PenLine, X } from 'lucide-react';
+import { MenuIcon, XIcon, PenLineIcon } from './Icons';
 import ScrambleText from './ScrambleText';
 import './Navbar.css';
 
@@ -148,11 +148,11 @@ const Navbar = () => {
                   transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
               >
-                {menuOpen ? <X size={16} /> : <Menu size={16} />}
+                {menuOpen ? <XIcon size={16} /> : <MenuIcon size={16} />}
                 <ScrambleText text="MENU" />
               </button>
               <Link to="/contact" className="contact-btn" aria-label="Contact">
-                <PenLine size={16} />
+                <PenLineIcon size={16} />
               </Link>
             </div>
           </div>
