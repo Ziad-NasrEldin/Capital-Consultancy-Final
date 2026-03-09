@@ -1,35 +1,97 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useMemo, useState } from 'react';
 import './HalftoneImage.css';
+import { optimizeImageUrl, buildUnsplashSrcSet } from '../utils/imageUrl';
 
-// Output canvas resolution — 4:3 matches the container's aspect-ratio
-const OUT_W    = 1200;
-const OUT_H    = 900;
 // Gaussian blur radius applied before rasterization
 const BLUR_PX  = 3;
 // "15ppi" bitmap cell size — coarse grid sampled from blurred image
 const CELL     = 4;
 const BG_COLOR = '#aa2a19';
 
-const HalftoneImage = ({ src, alt, className = "", heroInteractive = false }) => {
+const HalftoneImage = ({
+  src,
+  alt,
+  className = "",
+  heroInteractive = false,
+  sizes,
+  intrinsicWidth = 1200,
+  intrinsicHeight = 900,
+}) => {
   const canvasRef    = useRef(null);
   const boostRef     = useRef(null);
   const containerRef = useRef(null);
   const hasRendered  = useRef(false);
-  const cursorPos    = useRef({ x: 0.5, y: 0.5 });
-  const isHovering   = useRef(false);
+  const cursorPos    = useRef({ x: 50, y: 50 });
+  const [isInView, setIsInView] = useState(heroInteractive);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const media = window.matchMedia('(max-width: 767px)');
+    const update = () => setIsMobile(media.matches);
+    update();
+    media.addEventListener('change', update);
+
+    return () => media.removeEventListener('change', update);
+  }, []);
+
+  const lightweightMode = isMobile && !heroInteractive;
+  const aspectRatio = intrinsicWidth / intrinsicHeight;
+
+  const imgSizes = sizes || (heroInteractive
+    ? '100vw'
+    : '(max-width: 767px) 92vw, (max-width: 1199px) 44vw, 28vw');
+
+  const optimizedSrc = useMemo(() => {
+    return optimizeImageUrl(src, heroInteractive
+      ? { width: 1920, height: 1080, quality: 72 }
+      : { width: 960, height: 720, quality: 60 });
+  }, [src, heroInteractive]);
+
+  const srcSet = useMemo(() => {
+    return buildUnsplashSrcSet(src, {
+      widths: heroInteractive ? [640, 960, 1280, 1600, 1920] : [320, 480, 640, 800, 960, 1200],
+      aspectRatio,
+      quality: heroInteractive ? 72 : 60,
+    });
+  }, [src, heroInteractive, aspectRatio]);
+
+  useEffect(() => {
+    if (heroInteractive || !containerRef.current || isInView) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '240px 0px' },
+    );
+
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [heroInteractive, isInView]);
 
   // ── Draw halftone onto canvas (lazy load when in viewport) ─────────────────
   useEffect(() => {
     hasRendered.current = false;
-  }, [src]);
+  }, [optimizedSrc]);
 
   useEffect(() => {
+    if (!isInView || lightweightMode) return;
+
     const canvas = canvasRef.current;
     const boostCanvas = boostRef.current;
     if (!canvas || !boostCanvas) return;
     if (hasRendered.current) return;
 
     hasRendered.current = true;
+    const isSmallViewport = typeof window !== 'undefined' && window.innerWidth < 768;
+    const OUT_W = heroInteractive ? 1200 : (isSmallViewport ? 640 : 900);
+    const OUT_H = Math.round(OUT_W * 0.75);
+
     {
       const img = new Image();
       img.crossOrigin = 'anonymous';
@@ -114,9 +176,9 @@ const HalftoneImage = ({ src, alt, className = "", heroInteractive = false }) =>
           }
         }
       };
-      img.src = src;
+      img.src = optimizedSrc;
     }
-  }, [src]);
+  }, [optimizedSrc, isInView, heroInteractive, lightweightMode]);
 
   // ── Cursor tracking for hero interactive mode ──────────────────────────────
   useEffect(() => {
@@ -126,23 +188,19 @@ const HalftoneImage = ({ src, alt, className = "", heroInteractive = false }) =>
 
     const handleMouseMove = (e) => {
       const rect = container.getBoundingClientRect();
-      // Check if cursor is within the container bounds
-      if (
-        e.clientX < rect.left || e.clientX > rect.right ||
-        e.clientY < rect.top  || e.clientY > rect.bottom
-      ) return;
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      // Clamp position to container bounds, don't skip updates even if over text
+      const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+      const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
       cursorPos.current = { x, y };
       container.style.setProperty('--cursor-x', `${x}%`);
       container.style.setProperty('--cursor-y', `${y}%`);
     };
 
-    // Use document-level listener so text/overlay elements don't block events
-    document.addEventListener('mousemove', handleMouseMove);
+    // Use document/window-level listener to track cursor even when over text overlays
+    document.addEventListener('mousemove', handleMouseMove, true);
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mousemove', handleMouseMove, true);
     };
   }, [heroInteractive]);
 
@@ -152,16 +210,42 @@ const HalftoneImage = ({ src, alt, className = "", heroInteractive = false }) =>
       className={`halftone-container ${heroInteractive ? 'hero-raster-interactive' : ''} ${className}`}
     >
       {/* Layer 1: Grayscale base — always visible */}
-      <img src={src} alt={alt} className="base-img" />
+      <img
+        src={optimizedSrc}
+        srcSet={srcSet}
+        sizes={imgSizes}
+        alt={alt}
+        className="base-img"
+        width={intrinsicWidth}
+        height={intrinsicHeight}
+        loading={heroInteractive ? 'eager' : 'lazy'}
+        decoding="async"
+        fetchPriority={heroInteractive ? 'high' : 'auto'}
+      />
 
-      {/* Layer 2: Full-colour copy — fades in on hover */}
-      <img src={src} alt="" className="color-img" aria-hidden="true" />
+      {isInView && !lightweightMode && (
+        <>
+          {/* Layer 2: Full-colour copy — fades in on hover */}
+          <img
+            src={optimizedSrc}
+            srcSet={srcSet}
+            sizes={imgSizes}
+            alt=""
+            className="color-img"
+            aria-hidden="true"
+            width={intrinsicWidth}
+            height={intrinsicHeight}
+            loading="lazy"
+            decoding="async"
+          />
 
-      {/* Layer 3: Halftone canvas — fades out on hover */}
-      <canvas ref={canvasRef} className="halftone-canvas" />
+          {/* Layer 3: Halftone canvas — fades out on hover */}
+          <canvas ref={canvasRef} className="halftone-canvas" />
 
-      {/* Layer 4: Hero-only boosted halftone hotspot */}
-      <canvas ref={boostRef} className="halftone-canvas halftone-canvas-boost" />
+          {/* Layer 4: Hero-only boosted halftone hotspot */}
+          <canvas ref={boostRef} className="halftone-canvas halftone-canvas-boost" />
+        </>
+      )}
     </div>
   );
 };

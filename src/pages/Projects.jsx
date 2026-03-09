@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { RevealText } from '../components/RevealText';
+import { optimizeImageUrl, buildUnsplashSrcSet } from '../utils/imageUrl';
 
 const projects = [
-  { name: 'Skyline Finance Center', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80', sector: 'Commercial Buildings', location: 'Dubai, UAE', scope: 'HVAC & Plumbing Design', services: 'Engineering Design' },
-  { name: 'National Health Hub', img: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80', sector: 'Healthcare Facilities', location: 'Riyadh, KSA', scope: 'Full MEP Systems', services: 'Project Management' },
-  { name: 'City Power Substation', img: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80', sector: 'Energy & Power', location: 'Abu Dhabi, UAE', scope: 'Electrical Network Design', services: 'Infrastructure' },
-  { name: 'Tech Park Phase 1', img: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80', sector: 'Industrial Facilities', location: 'Doha, Qatar', scope: 'Smart Systems Integration', services: 'Engineering Design' },
-  { name: 'Metropolitan Water Works', img: 'https://images.unsplash.com/photo-1541888081622-c90a1ff5a4d1?auto=format&fit=crop&q=80', sector: 'Infrastructure & Utilities', location: 'Cairo, Egypt', scope: 'Water Network Planning', services: 'Consulting' },
-  { name: 'Global Logistics Hub', img: 'https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&q=80', sector: 'Industrial Facilities', location: 'Jeddah, KSA', scope: 'Value Engineering', services: 'Consulting' }
+  { name: 'Skyline Finance Center', img: '/images/unsplash/project-skyline.webp', sector: 'Commercial Buildings', location: 'Dubai, UAE', scope: 'HVAC & Plumbing Design', services: 'Engineering Design' },
+  { name: 'National Health Hub', img: '/images/unsplash/project-health.webp', sector: 'Healthcare Facilities', location: 'Riyadh, KSA', scope: 'Full MEP Systems', services: 'Project Management' },
+  { name: 'City Power Substation', img: '/images/unsplash/project-power.webp', sector: 'Energy & Power', location: 'Abu Dhabi, UAE', scope: 'Electrical Network Design', services: 'Infrastructure' },
+  { name: 'Tech Park Phase 1', img: '/images/unsplash/services-test.webp', sector: 'Industrial Facilities', location: 'Doha, Qatar', scope: 'Smart Systems Integration', services: 'Engineering Design' },
+  { name: 'Metropolitan Water Works', img: '/images/unsplash/project-health.webp', sector: 'Infrastructure & Utilities', location: 'Cairo, Egypt', scope: 'Water Network Planning', services: 'Consulting' },
+  { name: 'Global Logistics Hub', img: '/images/unsplash/project-logistics.webp', sector: 'Industrial Facilities', location: 'Jeddah, KSA', scope: 'Value Engineering', services: 'Consulting' }
 ];
 
 const Projects = () => {
@@ -61,7 +62,13 @@ const Projects = () => {
               }}>
                 <img
                   src={proj.img}
+                  srcSet={`${proj.img.replace('.webp', '.avif')} 1x, ${proj.img} 1x`}
+                  sizes="(max-width: 767px) 92vw, (max-width: 1199px) 46vw, 30vw"
                   alt={proj.name}
+                  width={1600}
+                  height={1000}
+                  loading="lazy"
+                  decoding="async"
                   style={{
                     width: '100%',
                     height: '100%',

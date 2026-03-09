@@ -65,34 +65,30 @@
   transition: none;
   z-index: 4;
   -webkit-mask-image: radial-gradient(
-    circle 100px at var(--cursor-x, 50%) var(--cursor-y, 50%),
+    circle 75px at var(--cursor-x, 50%) var(--cursor-y, 50%),
     black 0,
-    black 15px,
-    rgba(0, 0, 0, 0.76) 24px,
-    rgba(0, 0, 0, 0.57) 32px,
-    rgba(0, 0, 0, 0.41) 41px,
-    rgba(0, 0, 0, 0.28) 49px,
-    rgba(0, 0, 0, 0.18) 58px,
-    rgba(0, 0, 0, 0.10) 66px,
-    rgba(0, 0, 0, 0.05) 75px,
-    rgba(0, 0, 0, 0.02) 83px,
-    rgba(0, 0, 0, 0.005) 92px,
-    transparent 100px
+    black 12px,
+    rgba(0, 0, 0, 0.85) 20px,
+    rgba(0, 0, 0, 0.70) 28px,
+    rgba(0, 0, 0, 0.55) 36px,
+    rgba(0, 0, 0, 0.40) 44px,
+    rgba(0, 0, 0, 0.25) 52px,
+    rgba(0, 0, 0, 0.12) 60px,
+    rgba(0, 0, 0, 0.04) 68px,
+    transparent 75px
   );
   mask-image: radial-gradient(
-    circle 100px at var(--cursor-x, 50%) var(--cursor-y, 50%),
+    circle 75px at var(--cursor-x, 50%) var(--cursor-y, 50%),
     black 0,
-    black 15px,
-    rgba(0, 0, 0, 0.76) 24px,
-    rgba(0, 0, 0, 0.57) 32px,
-    rgba(0, 0, 0, 0.41) 41px,
-    rgba(0, 0, 0, 0.28) 49px,
-    rgba(0, 0, 0, 0.18) 58px,
-    rgba(0, 0, 0, 0.10) 66px,
-    rgba(0, 0, 0, 0.05) 75px,
-    rgba(0, 0, 0, 0.02) 83px,
-    rgba(0, 0, 0, 0.005) 92px,
-    transparent 100px
+    black 12px,
+    rgba(0, 0, 0, 0.85) 20px,
+    rgba(0, 0, 0, 0.70) 28px,
+    rgba(0, 0, 0, 0.55) 36px,
+    rgba(0, 0, 0, 0.40) 44px,
+    rgba(0, 0, 0, 0.25) 52px,
+    rgba(0, 0, 0, 0.12) 60px,
+    rgba(0, 0, 0, 0.04) 68px,
+    transparent 75px
   );
 }
 
@@ -138,35 +134,31 @@
   z-index: 3;
   transition: none !important;
   -webkit-mask-image: radial-gradient(
-    circle 100px at var(--cursor-x, 50%) var(--cursor-y, 50%),
+    circle 75px at var(--cursor-x, 50%) var(--cursor-y, 50%),
     transparent 0,
-    transparent 15px,
-    rgba(0, 0, 0, 0.24) 24px,
-    rgba(0, 0, 0, 0.43) 32px,
-    rgba(0, 0, 0, 0.59) 41px,
-    rgba(0, 0, 0, 0.72) 49px,
-    rgba(0, 0, 0, 0.82) 58px,
-    rgba(0, 0, 0, 0.90) 66px,
-    rgba(0, 0, 0, 0.95) 75px,
-    rgba(0, 0, 0, 0.98) 83px,
-    rgba(0, 0, 0, 0.995) 92px,
-    black 100px,
+    transparent 12px,
+    rgba(0, 0, 0, 0.15) 20px,
+    rgba(0, 0, 0, 0.30) 28px,
+    rgba(0, 0, 0, 0.45) 36px,
+    rgba(0, 0, 0, 0.60) 44px,
+    rgba(0, 0, 0, 0.75) 52px,
+    rgba(0, 0, 0, 0.88) 60px,
+    rgba(0, 0, 0, 0.96) 68px,
+    black 75px,
     black 100%
   );
   mask-image: radial-gradient(
-    circle 100px at var(--cursor-x, 50%) var(--cursor-y, 50%),
+    circle 75px at var(--cursor-x, 50%) var(--cursor-y, 50%),
     transparent 0,
-    transparent 15px,
-    rgba(0, 0, 0, 0.24) 24px,
-    rgba(0, 0, 0, 0.43) 32px,
-    rgba(0, 0, 0, 0.59) 41px,
-    rgba(0, 0, 0, 0.72) 49px,
-    rgba(0, 0, 0, 0.82) 58px,
-    rgba(0, 0, 0, 0.90) 66px,
-    rgba(0, 0, 0, 0.95) 75px,
-    rgba(0, 0, 0, 0.98) 83px,
-    rgba(0, 0, 0, 0.995) 92px,
-    black 100px,
+    transparent 12px,
+    rgba(0, 0, 0, 0.15) 20px,
+    rgba(0, 0, 0, 0.30) 28px,
+    rgba(0, 0, 0, 0.45) 36px,
+    rgba(0, 0, 0, 0.60) 44px,
+    rgba(0, 0, 0, 0.75) 52px,
+    rgba(0, 0, 0, 0.88) 60px,
+    rgba(0, 0, 0, 0.96) 68px,
+    black 75px,
     black 100%
   );
 }

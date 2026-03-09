@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, MotionConfig, useReducedMotion } from 'framer-motion';
 import { RevealText, RevealLines } from '../components/RevealText';
 import HalftoneImage from '../components/HalftoneImage';
 import ScrambleText from '../components/ScrambleText';
+import LazySection from '../components/LazySection';
+import { getLocalImageFormats } from '../utils/imageUrl';
 import './Home.css';
 
 const fadeUpVariant = {
@@ -55,8 +57,10 @@ const staggerItem = {
 const Home = () => {
   const heroRef = useRef(null);
   const rafRef = useRef(null);
+  const prefersReducedMotion = useReducedMotion();
   const [hoveredService, setHoveredService] = useState(null);
   const [industryHovered, setIndustryHovered] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   const cursorState = useRef({
     x: 50,
     y: 50,
@@ -65,6 +69,17 @@ const Home = () => {
     opacity: 0,
     targetOpacity: 0,
   });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const media = window.matchMedia('(max-width: 767px)');
+    const update = () => setIsMobile(media.matches);
+    update();
+    media.addEventListener('change', update);
+
+    return () => media.removeEventListener('change', update);
+  }, []);
 
   useEffect(() => {
     const heroEl = heroRef.current;
@@ -124,7 +139,11 @@ const Home = () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
+
+  const reduceMotion = prefersReducedMotion || isMobile;
+
   return (
+    <MotionConfig reducedMotion={reduceMotion ? 'always' : 'never'}>
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -143,8 +162,12 @@ const Home = () => {
         >
           <HalftoneImage
             className="hero-halftone-full"
-            src="https://images.unsplash.com/photo-1465804575741-338df8554e02?auto=format&fit=crop&q=80"
+            src="/images/unsplash/hero.webp"
+            srcSet={`/images/unsplash/hero.avif 1x, /images/unsplash/hero.webp 1x`}
             alt="Large-scale engineering structure"
+            sizes="100vw"
+            intrinsicWidth={1920}
+            intrinsicHeight={1080}
             heroInteractive
           />
         </motion.div>
@@ -232,6 +255,7 @@ const Home = () => {
         </div>
       </section>
 
+      <LazySection minHeight={900}>
       {/* SECTION 2 - SERVICES SHOWCASE */}
       <section className="svc-showcase">
         {/* Header bar */}
@@ -298,6 +322,9 @@ const Home = () => {
               <HalftoneImage
                 src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80"
                 alt="Engineering services"
+                sizes="(max-width: 767px) 92vw, 62vw"
+                intrinsicWidth={1600}
+                intrinsicHeight={900}
                 heroInteractive
                 className="hero-halftone-full"
               />
@@ -355,11 +382,11 @@ const Home = () => {
         {/* Service list rows */}
         <ul className="svc-list" onMouseLeave={() => setHoveredService(null)}>
           {[
-            { slug: 'engineering-technical-consulting', title: ['Engineering &', 'Technical Consulting'], desc: 'Expert advisory services for planning, feasibility studies, and system design across all disciplines.', img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80' },
-            { slug: 'engineering-design-planning', title: ['Engineering', 'Design & Planning'], desc: 'Complete electrical, mechanical, structural, and civil engineering design for projects of any scale.', img: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80' },
-            { slug: 'infrastructure-smart-systems', title: ['Infrastructure &', 'Smart Systems'], desc: 'Utility networks, smart building systems, data centers, and renewable energy integration solutions.', img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80' },
-            { slug: 'project-construction-management', title: ['Project &', 'Construction Management'], desc: 'Planning, scheduling, supervision, and comprehensive project lifecycle control from start to finish.', img: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80' },
-            { slug: 'testing-commissioning', title: ['Testing, Commissioning', '& Optimization'], desc: 'System audits, performance testing, safety compliance, and operational optimization for completed works.', img: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80' }
+            { slug: 'engineering-technical-consulting', title: ['Engineering &', 'Technical Consulting'], desc: 'Expert advisory services for planning, feasibility studies, and system design across all disciplines.', img: '/images/unsplash/services-eng.webp' },
+            { slug: 'engineering-design-planning', title: ['Engineering', 'Design & Planning'], desc: 'Complete electrical, mechanical, structural, and civil engineering design for projects of any scale.', img: '/images/unsplash/services-design.webp' },
+            { slug: 'infrastructure-smart-systems', title: ['Infrastructure &', 'Smart Systems'], desc: 'Utility networks, smart building systems, data centers, and renewable energy integration solutions.', img: '/images/unsplash/services-infra.webp' },
+            { slug: 'project-construction-management', title: ['Project &', 'Construction Management'], desc: 'Planning, scheduling, supervision, and comprehensive project lifecycle control from start to finish.', img: '/images/unsplash/services-pm.webp' },
+            { slug: 'testing-commissioning', title: ['Testing, Commissioning', '& Optimization'], desc: 'System audits, performance testing, safety compliance, and operational optimization for completed works.', img: '/images/unsplash/services-test.webp' }
           ].map((service, index) => {
             const isActive = hoveredService === index;
             return (
@@ -390,6 +417,9 @@ const Home = () => {
                 <HalftoneImage
                   src={service.img}
                   alt={service.title.join(' ')}
+                  sizes="(max-width: 767px) 88vw, (max-width: 1199px) 42vw, 28vw"
+                  intrinsicWidth={1200}
+                  intrinsicHeight={900}
                 />
               </div>
 
@@ -421,7 +451,9 @@ const Home = () => {
           );})}
         </ul>
       </section>
+      </LazySection>
 
+      <LazySection minHeight={780}>
       {/* SECTION 3 - INDUSTRIES SERVED */}
       <section style={{ backgroundColor: 'rgba(var(--primary-rgb), 0.05)', padding: '6rem 0' }}>
         <div className="container">
@@ -558,9 +590,11 @@ const Home = () => {
           </div>
         </div>
       </section>
+      </LazySection>
 
 
 
+      <LazySection minHeight={640}>
       {/* SECTION 5 - FEATURED PROJECTS */}
       <section className="featured-projects container section-padding">
         <div className="flex-between">
@@ -596,7 +630,13 @@ const Home = () => {
           ].map((item, i) => (
             <motion.div className="project-card" key={i} variants={slowFadeUpVariant}>
               <div className="project-image-placeholder" style={{ padding: '2px', backgroundColor: 'var(--primary-blue)', marginBottom: '1.5rem' }}>
-                 <HalftoneImage src={item.img} alt={`Project Alpha ${i}`} />
+                 <HalftoneImage
+                   src={item.img}
+                   alt={`Project Alpha ${i}`}
+                   sizes="(max-width: 767px) 88vw, (max-width: 1199px) 44vw, 30vw"
+                   intrinsicWidth={1200}
+                   intrinsicHeight={900}
+                 />
               </div>
               <div className="project-info">
                 <h3>Project Alpha {i + 1}</h3>
@@ -606,7 +646,9 @@ const Home = () => {
           ))}
         </motion.div>
       </section>
+      </LazySection>
 
+      <LazySection minHeight={420}>
       {/* SECTION 6 - CTA */}
       <motion.section 
         className="cta-section bg-blue text-center"
@@ -651,7 +693,9 @@ const Home = () => {
         </div>
         <div className="blueprint-overlay"></div>
       </motion.section>
+      </LazySection>
     </motion.div>
+    </MotionConfig>
   );
 };
 

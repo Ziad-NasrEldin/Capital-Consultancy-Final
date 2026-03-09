@@ -7,11 +7,11 @@ import HalftoneImage from '../components/HalftoneImage';
 import './ServicesOverview.css';
 
 const services = [
-  { slug: 'engineering-technical-consulting', title: ['Engineering &', 'Technical Consulting'], desc: 'Expert advisory services for planning, feasibility studies, and system design across all engineering disciplines.', img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80' },
-  { slug: 'engineering-design-planning', title: ['Engineering', 'Design & Planning'], desc: 'Complete electrical, mechanical, structural, and civil engineering design for projects of any scale.', img: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80' },
-  { slug: 'infrastructure-smart-systems', title: ['Infrastructure &', 'Smart Systems'], desc: 'Utility networks, smart building systems, data centers, and renewable energy integration solutions.', img: 'https://images.unsplash.com/photo-1497366754035-f200968a6e23?auto=format&fit=crop&q=80' },
-  { slug: 'project-construction-management', title: ['Project &', 'Construction Management'], desc: 'Planning, scheduling, supervision, and comprehensive project lifecycle control from start to finish.', img: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80' },
-  { slug: 'testing-commissioning', title: ['Testing, Commissioning', '& Optimization'], desc: 'System audits, performance testing, safety compliance, and operational optimization for completed works.', img: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80' }
+  { slug: 'engineering-technical-consulting', title: ['Engineering &', 'Technical Consulting'], desc: 'Expert advisory services for planning, feasibility studies, and system design across all engineering disciplines.', img: '/images/unsplash/services-eng.webp' },
+  { slug: 'engineering-design-planning', title: ['Engineering', 'Design & Planning'], desc: 'Complete electrical, mechanical, structural, and civil engineering design for projects of any scale.', img: '/images/unsplash/services-design.webp' },
+  { slug: 'infrastructure-smart-systems', title: ['Infrastructure &', 'Smart Systems'], desc: 'Utility networks, smart building systems, data centers, and renewable energy integration solutions.', img: '/images/unsplash/services-infra.webp' },
+  { slug: 'project-construction-management', title: ['Project &', 'Construction Management'], desc: 'Planning, scheduling, supervision, and comprehensive project lifecycle control from start to finish.', img: '/images/unsplash/services-pm.webp' },
+  { slug: 'testing-commissioning', title: ['Testing, Commissioning', '& Optimization'], desc: 'System audits, performance testing, safety compliance, and operational optimization for completed works.', img: '/images/unsplash/services-test.webp' }
 ];
 
 const slowFadeUp = {
@@ -70,8 +70,11 @@ const ServicesOverview = () => {
             transition={{ duration: 1.5, ease: [0.2, 0.8, 0.2, 1], delay: 0.8 }}
           >
             <HalftoneImage
-              src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&q=80"
+              src="/images/unsplash/services-overview-hero.webp"
               alt="Engineering services overview"
+              sizes="(max-width: 767px) 94vw, (max-width: 1199px) 72vw, 56vw"
+              intrinsicWidth={1600}
+              intrinsicHeight={900}
             />
           </motion.div>
 
@@ -106,6 +109,9 @@ const ServicesOverview = () => {
                 <HalftoneImage
                   src={service.img}
                   alt={service.title.join(' ')}
+                  sizes="(max-width: 767px) 90vw, (max-width: 1199px) 44vw, 28vw"
+                  intrinsicWidth={1200}
+                  intrinsicHeight={900}
                 />
               </div>
 
