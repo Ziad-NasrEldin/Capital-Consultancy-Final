@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, MotionConfig, useReducedMotion } from 'framer-motion';
+import { motion, MotionConfig } from 'framer-motion';
 import { RevealText, RevealLines } from '../components/RevealText';
 import HalftoneImage from '../components/HalftoneImage';
 import ScrambleText from '../components/ScrambleText';
@@ -57,7 +57,6 @@ const staggerItem = {
 const Home = () => {
   const heroRef = useRef(null);
   const rafRef = useRef(null);
-  const prefersReducedMotion = useReducedMotion();
   const [hoveredService, setHoveredService] = useState(null);
   const [industryHovered, setIndustryHovered] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -140,7 +139,7 @@ const Home = () => {
     };
   }, []);
 
-  const reduceMotion = prefersReducedMotion || isMobile;
+  const reduceMotion = true;
 
   return (
     <MotionConfig reducedMotion={reduceMotion ? 'always' : 'never'}>
@@ -153,24 +152,21 @@ const Home = () => {
     >
       {/* SECTION 1 - HERO */}
       <section className="hero" ref={heroRef}>
-        <motion.div
-          className="hero-bg-media"
-          initial={{ opacity: 0, scale: 1.1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 2, ease: [0.19, 1, 0.22, 1], delay: 0.2 }}
-          style={{ willChange: 'transform, opacity' }}
-        >
-          <HalftoneImage
-            className="hero-halftone-full"
-            src="/images/unsplash/hero.webp"
-            srcSet={`/images/unsplash/hero.avif 1x, /images/unsplash/hero.webp 1x`}
-            alt="Large-scale engineering structure"
-            sizes="100vw"
-            intrinsicWidth={1920}
-            intrinsicHeight={1080}
-            heroInteractive={!reduceMotion}
-          />
-        </motion.div>
+        <div className="hero-bg-media" style={{ willChange: 'auto' }}>
+          <picture>
+            <source srcSet="/images/unsplash/hero.webp" type="image/webp" />
+            <img
+              src="/images/unsplash/hero.webp"
+              alt="Large-scale engineering structure"
+              width="1920"
+              height="1080"
+              fetchPriority="high"
+              loading="eager"
+              decoding="async"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
+          </picture>
+        </div>
 
         <motion.div
           className="blueprint-overlay"
